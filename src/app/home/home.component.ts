@@ -10,12 +10,12 @@ import { HousingService } from '../housing.service';
   template: `
       <section>
             <form>
-              <input type="text" name="search" id="search" placeholder="filter by city">
-              <button type="button">Search</button>
+              <input type="text" name="search" id="search" placeholder="filter by city" #filter>
+              <button (click)="filterResult(filter.value)" type="button">Search</button>
             </form>
       </section>
       <section class="results">
-        @for (houseLocation of housingLocationList; track $index) {
+        @for (houseLocation of fiterLocationList; track $index) {
           <app-housinglocation [housingLocation]="houseLocation"></app-housinglocation>
         }
       </section>
@@ -25,8 +25,19 @@ import { HousingService } from '../housing.service';
 export class HomeComponent {
   housingLocationList:Housinglocation[] = [];
   housingService:HousingService = inject(HousingService);
+  fiterLocationList:Housinglocation[] = []
 
   constructor() {
-    this.housingLocationList = this.housingService.getAllHousingLocation();
+  this.housingService.getAllHousingLocation().then((housingLocationList:Housinglocation[]) => {
+      this.housingLocationList = housingLocationList;
+      this.fiterLocationList = housingLocationList;
+    })
+  }
+
+  filterResult(text:string) {
+    if(!text) this.fiterLocationList = this.housingLocationList;
+    this.fiterLocationList = this.housingLocationList.filter((houseLocation) =>
+       houseLocation?.city.toLowerCase().includes(text.toLowerCase()));
+    console.log(this.fiterLocationList)
   }
 }
