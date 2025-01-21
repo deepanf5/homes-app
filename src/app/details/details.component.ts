@@ -1,23 +1,45 @@
 import { Component,inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { HousingService } from '../housing.service';
+import { Housinglocation } from '../housinglocation';
 
 @Component({
   selector: 'app-details',
   standalone: true,
   imports: [],
   template: `
-    <p>
-      {{housingLocationId}}
-    </p>
+   <article>
+    <img class="listing-photo" [src]="housingLocation?.photo" [alt]="housingLocation?.name">
+    <section class="lisiting-description">
+      <h2 class="listing-heading">{{housingLocation?.name}}</h2>
+      <p>{{housingLocation?.city}}{{housingLocation?.state}}</p>
+    </section>
+    <section class="listing-features">
+      <h2 class="section-heading">About this housing location</h2>
+      <ul>
+        <li>Unit available:{{housingLocation?.availableUnits}}</li>
+        <li>Does this location have wifi: {{housingLocation?.wifi}}</li>
+        <li>Does this location have laundary:{{housingLocation?.laundry}}</li>
+      </ul>
+    </section>
+    <section class="listing-apply">
+      <h2 class="section-heading">Apply now to live here</h2>
+      <button class="primary">
+        Apply Now
+      </button>
+    </section>
+   </article>
   `,
   styleUrl: './details.component.css'
 })
 export class DetailsComponent {
   route:ActivatedRoute = inject(ActivatedRoute);
-  housingLocationId = 0;
+  hosuingservice:HousingService = inject(HousingService)
+  housingLocation:Housinglocation | undefined
 
   constructor(){
-    this.housingLocationId = this.route.snapshot.params['id']
+    const housingLocationId = Number(this.route.snapshot.params['id'])
+    this.housingLocation = this.hosuingservice.getHousingLocationById(housingLocationId)
   }
 
 }
