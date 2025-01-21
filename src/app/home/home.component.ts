@@ -13,7 +13,7 @@ import { Housinglocation } from '../housinglocation';
               <button type="button">Search</button>
             </form>
       </section>
-      <section class="result">
+      <section class="results">
         @for (houseLocation of housingLocationList; track $index) {
           <app-housinglocation [housingLocation]="houseLocation"></app-housinglocation>
         }
